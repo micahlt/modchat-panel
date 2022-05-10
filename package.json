@@ -1,0 +1,20 @@
+{
+  "name": "vite-vue3-simple-starter",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --port 3005",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "click-outside-vue3": "^4.0.1",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.14"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.1",
+    "unplugin-vue-components": "^0.19.3",
+    "vite": "^2.9.5"
+  }
+}
