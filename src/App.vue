@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     authenticate() {
-      fetch(`https://s.modchatserver.micahlindley.com/api/refresh`, {
+      fetch(`https://modchatserver.micahlindley.com/api/refresh`, {
         method: "POST",
         body: JSON.stringify({
           username: window.localStorage.getItem("u"),
@@ -83,7 +83,7 @@ export default {
     },
     authorize() {
       fetch(
-        `https://s.modchatserver.micahlindley.com/api/session/isMod/${window.localStorage.getItem(
+        `https://modchatserver.micahlindley.com/api/session/isMod/${window.localStorage.getItem(
           "u"
         )}`
       )
@@ -97,7 +97,7 @@ export default {
         });
     },
     unban(username) {
-      fetch(`https://s.modchatserver.micahlindley.com/api/session/unban`, {
+      fetch(`https://modchatserver.micahlindley.com/api/session/unban`, {
         method: "POST",
         body: JSON.stringify({
           username: String(username),
@@ -107,10 +107,10 @@ export default {
           "Content-Type": "application/json; charset=utf-8",
         },
         credentials: "include",
-      })
+      });
     },
     unmute(username) {
-      fetch(`https://s.modchatserver.micahlindley.com/api/session/mute`, {
+      fetch(`https://modchatserver.micahlindley.com/api/session/mute`, {
         method: "POST",
         body: JSON.stringify({
           username: String(username),
@@ -121,7 +121,7 @@ export default {
           "Content-Type": "application/json; charset=utf-8",
         },
         credentials: "include",
-      })
+      });
     },
     closeModals() {
       this.actionUsername = "";

@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     mute() {
-      fetch(`https://s.modchatserver.micahlindley.com/api/session/mute`, {
+      fetch(`https://modchatserver.micahlindley.com/api/session/mute`, {
         method: "POST",
         body: JSON.stringify({
           username: String(this.user),

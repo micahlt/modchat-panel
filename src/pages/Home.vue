@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     getReported() {
-      fetch(`https://s.modchatserver.micahlindley.com/api/reported`, {
+      fetch(`https://modchatserver.micahlindley.com/api/reported`, {
         method: "POST",
         body: JSON.stringify({
           access_token: this.at,
@@ -90,7 +90,7 @@ export default {
         });
     },
     getNewBannedMuted() {
-      fetch(`https://s.modchatserver.micahlindley.com/api/bannedMuted`, {
+      fetch(`https://modchatserver.micahlindley.com/api/bannedMuted`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json; charset=utf-8",
@@ -105,7 +105,7 @@ export default {
     },
     ignore(msg) {
       console.log(msg);
-      fetch(`https://s.modchatserver.micahlindley.com/api/messages/report`, {
+      fetch(`https://modchatserver.micahlindley.com/api/messages/report`, {
         method: "POST",
         body: JSON.stringify({
           username: window.localStorage.getItem("u"),
@@ -128,13 +128,13 @@ export default {
       });
     },
     bannedMutedDelete(data) {
-          const index = this.bannedMuted.findIndex((m) => {
-            return m.id == data.id;
-          });
-          this.bannedMuted.splice(index, 1);
+      const index = this.bannedMuted.findIndex((m) => {
+        return m.id == data.id;
+      });
+      this.bannedMuted.splice(index, 1);
     },
     del(msg) {
-      fetch(`https://s.modchatserver.micahlindley.com/api/messages/delete`, {
+      fetch(`https://modchatserver.micahlindley.com/api/messages/delete`, {
         method: "POST",
         body: JSON.stringify({
           room: msg.room,

@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     ban() {
-      fetch(`https://s.modchatserver.micahlindley.com/api/session/ban`, {
+      fetch(`https://modchatserver.micahlindley.com/api/session/ban`, {
         method: "POST",
         body: JSON.stringify({
           username: String(this.user),
