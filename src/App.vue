@@ -6,11 +6,22 @@
       :at="access_token"
       v-if="access_token"
       @banModal="openBan"
+      @muteModal="openMute"
+      @unban="unbanPrep"
+      @unmute="unmutePrep"
       ref="page"
     />
   </router-view>
   <BanModal
     v-if="banModalOpen"
+    @close="closeModals"
+    :at="access_token"
+    :username="actionUsername"
+    :fromMessage="actionMessage"
+    @removeNotif="removeNotif"
+  />
+  <muteModal
+    v-if="muteModalOpen"
     @close="closeModals"
     :at="access_token"
     :username="actionUsername"
@@ -27,6 +38,7 @@ export default {
     return {
       access_token: null,
       banModalOpen: false,
+      muteModalOpen: false,
       actionUsername: "",
       actionMessage: {},
     };
@@ -84,6 +96,33 @@ export default {
           }
         });
     },
+    unban(username) {
+      fetch(`https://s.modchatserver.micahlindley.com/api/session/unban`, {
+        method: "POST",
+        body: JSON.stringify({
+          username: String(username),
+          access_token: String(this.access_token),
+        }),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        credentials: "include",
+      })
+    },
+    unmute(username) {
+      fetch(`https://s.modchatserver.micahlindley.com/api/session/mute`, {
+        method: "POST",
+        body: JSON.stringify({
+          username: String(username),
+          access_token: String(this.acesss_token),
+          timeStamp: Number(-50),
+        }),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        credentials: "include",
+      })
+    },
     closeModals() {
       this.actionUsername = "";
       this.actionMessage = {};
@@ -94,6 +133,21 @@ export default {
       this.actionUsername = msg.username;
       this.actionMessage = msg;
       this.banModalOpen = true;
+    },
+    openMute(msg) {
+      this.actionUsername = msg.username;
+      this.actionMessage = msg;
+      this.muteModalOpen = true;
+    },
+    unmutePrep(msg) {
+      this.actionUsername = msg.username;
+      this.actionMessage = msg;
+      this.unmute(this.actionUsername);
+    },
+    unbanPrep(msg) {
+      this.actionUsername = msg.username;
+      this.actionMessage = msg;
+      this.unban(this.actionUsername);
     },
     removeNotif() {
       this.$refs.page.ignore(this.actionMessage);

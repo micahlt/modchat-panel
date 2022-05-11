@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "BanModal",
+  name: "Modal",
   emits: ["removeNotif"],
   props: {
     at: String,
@@ -20,14 +20,13 @@ export default {
     this.user = this.username;
   },
   methods: {
-    ban() {
-      fetch(`https://s.modchatserver.micahlindley.com/api/session/ban`, {
+    mute() {
+      fetch(`https://s.modchatserver.micahlindley.com/api/session/mute`, {
         method: "POST",
         body: JSON.stringify({
           username: String(this.user),
           access_token: String(this.at),
-          timestamp: Number(Date.now() + this.expiry * 3600000),
-          reason: String(this.reason),
+          timeStamp: Number(this.expiry * 60000),
         }),
         headers: {
           "Content-Type": "application/json; charset=utf-8",
@@ -46,7 +45,7 @@ export default {
 <template>
   <div class="modal-parent" @click="$emit('close')">
     <div class="modal" @click.stop>
-      <h2>Ban User</h2>
+      <h2>Mute User</h2>
       <div class="input-wrapper">
         <input
           type="text"
@@ -61,20 +60,12 @@ export default {
           type="text"
           name="duration"
           v-model="expiry"
-          placeholder="duration (hours)"
+          placeholder="duration (minutes)"
         />
         <span></span>
       </div>
-      <div class="input-wrapper long">
-        <input
-          type="text"
-          name="reason"
-          v-model="reason"
-          placeholder="reasoning for ban"
-        />
+      <a href="#" class="button" @click.prevent="mute">MUTE</a>
         <span></span>
-      </div>
-      <a href="#" class="button" @click.prevent="ban">BAN</a>
     </div>
   </div>
 </template>

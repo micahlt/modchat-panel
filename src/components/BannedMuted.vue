@@ -1,14 +1,31 @@
 <template>
-  <div class="message">
-    <img :src="msg.profile_picture" :alt="msg.username" @click="openUser" />
-    <div class="message-content">
+  <div class="bannedMuted">
+    <img :src="msg.scratch_picture" :alt="msg.username" @click="openUser" />
+    <div class="content">
       <p class="title" @click="openUser">
         <b>{{ msg.username }}</b>
       </p>
-      <p class="message-text">{{ msg.message }}</p>
+      <p v-if="msg.ban_expiry > Date.now()" class="message-text">
+        {{ msg.ban_reason }}
+      </p>
       <p class="message-timestamp">
+        Banned Until:
         {{
-          new Date(msg.time).toLocaleString("en-US", {
+          new Date(msg.ban_expiry).toLocaleString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        }}
+      </p>
+      <p class="message-timestamp">
+        Muted Until:
+        {{
+          new Date(msg.mutedFor).toLocaleString("en-US", {
             hour: "numeric",
             minute: "numeric",
             hour12: true,
@@ -28,10 +45,8 @@
         >more_vert</a
       >
       <div :class="{ options: true, visible: optsOpen }">
-        <a class="option" @click="ban">Ban user</a>
-        <a class="option" @click="mute">Mute user</a>
-        <a class="option" @click="del">Delete message</a>
-        <a class="option" @click="ignore">Ignore report</a>
+        <a class="option" @click="unban">Unban user</a>
+        <a class="option" @click="unmute">Unmute user</a>
       </div>
     </div>
   </div>
@@ -39,8 +54,8 @@
 
 <script>
 export default {
-  name: "Message",
-  emits: ["ignore", "delete", "ban", "mute"],
+  name: "BannedMuted",
+  emits: ["unban", "unmute"],
   props: {
     msg: Object,
   },
@@ -61,28 +76,22 @@ export default {
         this.optsOpen = false;
       }
     },
-    ignore() {
+    unban() {
       this.closeOptions();
-      this.$emit("ignore", this.msg);
+      this.$emit("unban", this.msg);
+      this.$emit("bannedMutedIgnore", this.msg);
     },
-    del() {
+    unmute() {
       this.closeOptions();
-      this.$emit("delete", this.msg);
+      this.$emit("unmute", this.msg);
+      this.$emit("bannedMutedIgnore", this.msg);
     },
-    ban() {
-      this.closeOptions();
-      this.$emit("ban", this.msg);
-    },
-    mute() {
-      this.closeOptions();
-      this.$emit("mute", this.msg);
-    }
   },
 };
 </script>
 
 <style scoped>
-.message {
+.bannedMuted {
   border: 1px solid #c1c1c1;
   background: #fbfbfb;
   border-radius: 0.25rem;

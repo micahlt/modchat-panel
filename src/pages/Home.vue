@@ -20,13 +20,31 @@
           @ignore="ignore"
           @delete="del"
           @ban="$emit('banModal', $event)"
+          @mute="$emit('muteModal', $event)"
         />
       </transition-group>
     </div>
     <div class="gridcol">
       <div class="col-heading">
         <h2>Banned &amp; Muted Users</h2>
+        <a
+          href="#"
+          class="refresher material-symbols-outlined"
+          @click.prevent="getNewBannedMuted"
+          title="Refresh"
+          >refresh</a
+        >
       </div>
+      <transition-group name="messages" tag="div" class="content">
+        <BannedMuted
+          v-for="m in bannedMuted"
+          :msg="m"
+          :key="m._id"
+          @unmute="$emit('unmute', $event)"
+          @unban="$emit('unban', $event)"
+          @bannedMutedIgnore="bannedMutedDelete"
+        />
+      </transition-group>
     </div>
   </main>
 </template>
@@ -34,18 +52,21 @@
 <script>
 export default {
   name: "Home",
-  emits: ["banModal"],
+  emits: ["banModal", "unban", "unmute"],
   props: {
     at: String,
   },
   data() {
     return {
       reportedMessages: [],
+      bannedMuted: [],
     };
   },
   mounted() {
     this.getReported();
+    this.getNewBannedMuted();
     setInterval(this.getReported, 45000);
+    setInterval(this.getNewBannedMuted, 45000);
   },
   methods: {
     getReported() {
@@ -66,6 +87,20 @@ export default {
         })
         .then((data) => {
           this.reportedMessages = data;
+        });
+    },
+    getNewBannedMuted() {
+      fetch(`https://s.modchatserver.micahlindley.com/api/bannedMuted`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.bannedMuted = data;
         });
     },
     ignore(msg) {
@@ -91,6 +126,12 @@ export default {
           this.reportedMessages.splice(index, 1);
         }
       });
+    },
+    bannedMutedDelete(data) {
+          const index = this.bannedMuted.findIndex((m) => {
+            return m.id == data.id;
+          });
+          this.bannedMuted.splice(index, 1);
     },
     del(msg) {
       fetch(`https://s.modchatserver.micahlindley.com/api/messages/delete`, {
@@ -153,7 +194,7 @@ main {
 
 .button:hover {
   color: #e6e6e6;
-  background: black;
+  background: #3c30ff;
 }
 
 .messages-move, /* apply transition to moving elements */
