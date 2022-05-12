@@ -21,6 +21,7 @@
           @delete="del"
           @ban="$emit('banModal', $event)"
           @mute="$emit('muteModal', $event)"
+          @context="$emit('contextModal', $event)"
         />
       </transition-group>
     </div>

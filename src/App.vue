@@ -7,6 +7,7 @@
       v-if="access_token"
       @banModal="openBan"
       @muteModal="openMute"
+      @contextModal="openContext"
       @unban="unbanPrep"
       @unmute="unmutePrep"
       ref="page"
@@ -28,22 +29,36 @@
     :fromMessage="actionMessage"
     @removeNotif="removeNotif"
   />
+<ContextModal
+    v-if="contextModalOpen"
+    @close="closeModals"
+    @banModal="openBan"
+    @muteModal="openMute"
+    @contextModal="openContext"
+    :at="access_token"
+    :username="actionUsername"
+    :fromMessage="actionMessage"
+    @removeNotif="removeNotif"
+  />
 </template>
 
 <script>
+import ContextModal from "./components/ContextModal.vue";
 export default {
   name: "App",
-  components: {},
+  components: { ContextModal },
   data() {
     return {
       access_token: null,
       banModalOpen: false,
       muteModalOpen: false,
+      contextModalOpen: false,
       actionUsername: "",
       actionMessage: {},
     };
   },
   mounted() {
+    window.contextModalOpen = false;
     if (
       window.localStorage.getItem("u") &&
       window.localStorage.getItem("u") != "null" &&
@@ -114,7 +129,7 @@ export default {
         method: "POST",
         body: JSON.stringify({
           username: String(username),
-          access_token: String(this.acesss_token),
+          access_token: String(this.access_token),
           timeStamp: Number(-50),
         }),
         headers: {
@@ -126,6 +141,10 @@ export default {
     closeModals() {
       this.actionUsername = "";
       this.actionMessage = {};
+      if(this.contextModalOpen === true && this.banModalOpen === false && this.muteModalOpen === false) {
+      this.contextModalOpen = false;
+      window.contextModalOpen = false;
+      }
       this.banModalOpen = false;
       this.muteModalOpen = false;
     },
@@ -138,6 +157,11 @@ export default {
       this.actionUsername = msg.username;
       this.actionMessage = msg;
       this.muteModalOpen = true;
+    },
+    openContext(msg) {
+      window.actionMessage = msg;
+      window.contextModalOpen = true;
+      this.contextModalOpen = true;
     },
     unmutePrep(msg) {
       this.actionUsername = msg.username;

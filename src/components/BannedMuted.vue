@@ -5,10 +5,10 @@
       <p class="title" @click="openUser">
         <b>{{ msg.username }}</b>
       </p>
-      <p v-if="msg.ban_expiry > Date.now()" class="message-text">
+      <p v-if="msg.banned === true" class="message-text">
         {{ msg.ban_reason }}
       </p>
-      <p class="message-timestamp">
+      <p v-if="msg.banned === true" class="message-timestamp">
         Banned Until:
         {{
           new Date(msg.ban_expiry).toLocaleString("en-US", {
@@ -78,13 +78,17 @@ export default {
     },
     unban() {
       this.closeOptions();
+      if(this.msg.banned === true) {
       this.$emit("unban", this.msg);
       this.$emit("bannedMutedIgnore", this.msg);
+      }
     },
     unmute() {
       this.closeOptions();
-      this.$emit("unmute", this.msg);
+      if(Date.now() < this.msg.mutedFor) {
+      this.$emit("unban", this.msg);
       this.$emit("bannedMutedIgnore", this.msg);
+      }
     },
   },
 };
