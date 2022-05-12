@@ -23,9 +23,9 @@
         v-if="msg.reply_id && replyData"
         :msg="replyData"
         class="reply"
-        @del="$emit('del', $event)"
-        @banModal="$emit('banModal', $event)"
-        @muteModal="$emit('muteModal', $event)"
+        @del="$emit('delete', $event)"
+        @banModal="$emit('ban', $event)"
+        @muteModal="$emit('mute', $event)"
         @contextModal="$emit('contextModal', $event)"
       />
       <div class="options-parent" v-click-outside="closeOptions">
@@ -88,15 +88,15 @@ export default {
     },
     del() {
       this.closeOptions();
-      this.$emit("del", this.msg);
+      this.$emit("delete", this.msg);
     },
     ban() {
       this.closeOptions();
-      this.$emit("banModal", this.msg);
+      this.$emit("ban", this.msg);
     },
     mute() {
       this.closeOptions();
-      this.$emit("muteModal", this.msg);
+      this.$emit("mute", this.msg);
     },
     context() {
       this.closeOptions();

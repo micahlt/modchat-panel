@@ -10,6 +10,7 @@
       @contextModal="openContext"
       @unban="unbanPrep"
       @unmute="unmutePrep"
+      @revokeSession="revokeSession"
       @del="del"
       ref="page"
     />
@@ -122,7 +123,6 @@ export default {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
-        credentials: "include",
       });
     },
     unmute(username) {
@@ -136,7 +136,19 @@ export default {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
-        credentials: "include",
+      });
+    },
+    revokeSession() {
+      const username = window.prompt("Who's session do you want to revoke?");
+      fetch(`https://modchatserver.micahlindley.com/api/session/revoke`, {
+        method: "POST",
+        body: JSON.stringify({
+          username: String(username),
+          access_token: String(this.access_token),
+        }),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
       });
     },
     closeModals() {
@@ -193,7 +205,6 @@ export default {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
-        credentials: "include",
       }).then((res) => {
         if (res.status == 200) {
           this.removeNotif(msg);

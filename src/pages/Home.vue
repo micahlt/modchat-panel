@@ -21,8 +21,8 @@
           :key="m._id"
           @ignore="ignore"
           @del="$emit('del', $event)"
-          @banModal="$emit('banModal', $event)"
-          @muteModal="$emit('muteModal', $event)"
+          @ban="$emit('banModal', $event)"
+          @mute="$emit('muteModal', $event)"
           @contextModal="$emit('contextModal', $event)"
         />
       </transition-group>
@@ -53,6 +53,10 @@
       <div class="col-heading">
         <h2>Admin Actions</h2>
       </div>
+      <p class="button" @click.prevent="this.$emit('banModal', $event)">Ban</p>
+      <p class="button" @click.prevent="this.$emit('muteModal', $event)">Mute</p>
+      <p class="button" @click.prevent="this.$emit('revokeSession', $event)">Revoke Session</p>
+      <p class="button" @click.prevent="this.$emit('contextModal', { username: `b1048546`, id: 1, message: `first`, reply_id: null, profile_picture: `https://uploads.scratch.mit.edu/get_image/user/22773795_60x60.png?v=`, reported: false, room: `general`, time: `2022-05-12T18:23:24.437Z` })">Context Modal</p>
     </div>
   </main>
 </template>

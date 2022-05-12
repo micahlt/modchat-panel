@@ -85,8 +85,8 @@ export default {
     },
     unmute() {
       this.closeOptions();
-      if (Date.now() < this.msg.mutedFor) {
-        this.$emit("unban", this.msg);
+      if (this.msg.banned === false) {
+        this.$emit("unmute", this.msg);
         this.$emit("bannedMutedIgnore", this.msg);
       }
     },
