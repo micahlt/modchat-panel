@@ -78,17 +78,13 @@ export default {
     },
     unban() {
       this.closeOptions();
-      if (this.msg.banned === true) {
         this.$emit("unban", this.msg);
         this.$emit("bannedMutedIgnore", this.msg);
-      }
     },
     unmute() {
       this.closeOptions();
-      if (this.msg.banned === false) {
         this.$emit("unmute", this.msg);
         this.$emit("bannedMutedIgnore", this.msg);
-      }
     },
   },
 };
