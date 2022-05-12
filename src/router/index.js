@@ -10,11 +10,15 @@ const routes = [
   },
   {
     path: "/home",
-    component: () => import("../pages/Home.vue"),
+    redirect: "/",
   },
   {
     path: "/404",
     component: () => import("../pages/404.vue"),
+  },
+  {
+    path: "/quick",
+    component: () => import("../pages/Quick.vue"),
   },
 ];
 const router = createRouter({

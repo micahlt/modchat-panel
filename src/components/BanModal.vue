@@ -1,7 +1,7 @@
 <script>
 export default {
   name: "BanModal",
-  emits: ["removeNotif"],
+  emits: ["removeNotif", "close"],
   props: {
     at: String,
     username: {

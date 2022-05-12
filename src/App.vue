@@ -10,6 +10,7 @@
       @contextModal="openContext"
       @unban="unbanPrep"
       @unmute="unmutePrep"
+      @del="del"
       ref="page"
     />
   </router-view>
@@ -29,7 +30,7 @@
     :fromMessage="actionMessage"
     @removeNotif="removeNotif"
   />
-<ContextModal
+  <ContextModal
     v-if="contextModalOpen"
     @close="closeModals"
     @banModal="openBan"
@@ -141,9 +142,13 @@ export default {
     closeModals() {
       this.actionUsername = "";
       this.actionMessage = {};
-      if(this.contextModalOpen === true && this.banModalOpen === false && this.muteModalOpen === false) {
-      this.contextModalOpen = false;
-      window.contextModalOpen = false;
+      if (
+        this.contextModalOpen === true &&
+        this.banModalOpen === false &&
+        this.muteModalOpen === false
+      ) {
+        this.contextModalOpen = false;
+        window.contextModalOpen = false;
       }
       this.banModalOpen = false;
       this.muteModalOpen = false;
@@ -173,9 +178,27 @@ export default {
       this.actionMessage = msg;
       this.unban(this.actionUsername);
     },
-    removeNotif() {
-      this.$refs.page.ignore(this.actionMessage);
+    removeNotif(msg) {
+      this.$refs.page.ignore(msg || this.actionMessage);
       this.closeModals();
+    },
+    del(msg) {
+      fetch(`https://modchatserver.micahlindley.com/api/messages/delete`, {
+        method: "POST",
+        body: JSON.stringify({
+          room: msg.room,
+          access_token: this.access_token,
+          id: msg.id,
+        }),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        credentials: "include",
+      }).then((res) => {
+        if (res.status == 200) {
+          this.removeNotif(msg);
+        }
+      });
     },
   },
 };

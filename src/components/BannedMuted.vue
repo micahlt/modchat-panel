@@ -55,7 +55,7 @@
 <script>
 export default {
   name: "BannedMuted",
-  emits: ["unban", "unmute"],
+  emits: ["unban", "unmute", "bannedMutedIgnore"],
   props: {
     msg: Object,
   },
@@ -78,16 +78,16 @@ export default {
     },
     unban() {
       this.closeOptions();
-      if(this.msg.banned === true) {
-      this.$emit("unban", this.msg);
-      this.$emit("bannedMutedIgnore", this.msg);
+      if (this.msg.banned === true) {
+        this.$emit("unban", this.msg);
+        this.$emit("bannedMutedIgnore", this.msg);
       }
     },
     unmute() {
       this.closeOptions();
-      if(Date.now() < this.msg.mutedFor) {
-      this.$emit("unban", this.msg);
-      this.$emit("bannedMutedIgnore", this.msg);
+      if (Date.now() < this.msg.mutedFor) {
+        this.$emit("unban", this.msg);
+        this.$emit("bannedMutedIgnore", this.msg);
       }
     },
   },

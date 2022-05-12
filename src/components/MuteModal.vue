@@ -1,7 +1,7 @@
 <script>
 export default {
   name: "Modal",
-  emits: ["removeNotif"],
+  emits: ["removeNotif", "close"],
   props: {
     at: String,
     username: {

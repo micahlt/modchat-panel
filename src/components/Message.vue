@@ -2,18 +2,8 @@
   <div class="message">
     <img :src="msg.profile_picture" :alt="msg.username" @click="openUser" />
     <div class="message-content">
-          <div
-            class="reply-preview"
-            v-if="msg.reply_id != null && replyData != null"
-          >
-            <span class="username"
-              ><strong>{{ replyData.username }}</strong>
-              <br />
-            </span>
-            <span class="message">{{ replyData.message }}</span>
-          </div>
       <p class="title" @click="openUser">
-        <b>{{ msg.username }}:</b>
+        <b>{{ msg.username }}</b>
       </p>
       <p class="message-text">{{ msg.message }}</p>
       <p class="message-timestamp">
@@ -28,44 +18,56 @@
             day: "numeric",
           })
         }}
-        
       </p>
-    <div class="options-parent" v-click-outside="closeOptions">
-      <a
-        class="material-symbols-outlined options-toggle"
-        role="button"
-        @click="toggleOptions"
-        >more_vert</a
-      >
-      <div :class="{ options: true, visible: optsOpen }">
-        <a class="option" @click="ban">Ban user</a>
-        <a class="option" @click="mute">Mute user</a>
-        <a class="option" @click="del">Delete message</a>
-        <a v-if="contextOpen===false" class="option" @click="ignore">Ignore report</a>
-        <a v-if="contextOpen===false" class="option" @click="context">Context log</a>
+      <Message
+        v-if="msg.reply_id && replyData"
+        :msg="replyData"
+        class="reply"
+        @del="$emit('del', $event)"
+        @banModal="$emit('banModal', $event)"
+        @muteModal="$emit('muteModal', $event)"
+        @contextModal="$emit('contextModal', $event)"
+      />
+      <div class="options-parent" v-click-outside="closeOptions">
+        <a
+          class="material-symbols-outlined options-toggle"
+          role="button"
+          @click="toggleOptions"
+          >more_vert</a
+        >
+        <div :class="{ options: true, visible: optsOpen }">
+          <a class="option" @click="ban">Ban user</a>
+          <a class="option" @click="mute">Mute user</a>
+          <a class="option" @click="del">Delete message</a>
+          <a v-if="contextOpen === false" class="option" @click="ignore"
+            >Ignore report</a
+          >
+          <a v-if="contextOpen === false" class="option" @click="context"
+            >Context log</a
+          >
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "Message",
-  emits: ["ignore", "delete", "ban", "mute", "context"],
+  emits: ["ignore", "del", "banModal", "muteModal", "contextModal"],
   props: {
     msg: Object,
   },
   mounted() {
     if (this.msg.reply_id) {
-      this.getReply()
-    } 
+      this.getReply();
+    }
   },
   data() {
     return {
       optsOpen: false,
       contextOpen: window.contextModalOpen,
-      replyData: null
+      replyData: null,
     };
   },
   methods: {
@@ -86,32 +88,32 @@ export default {
     },
     del() {
       this.closeOptions();
-      this.$emit("delete", this.msg);
+      this.$emit("del", this.msg);
     },
     ban() {
       this.closeOptions();
-      this.$emit("ban", this.msg);
+      this.$emit("banModal", this.msg);
     },
     mute() {
       this.closeOptions();
-      this.$emit("mute", this.msg);
+      this.$emit("muteModal", this.msg);
     },
     context() {
       this.closeOptions();
-      this.$emit("context", this.msg);
+      this.$emit("contextModal", this.msg);
     },
     getReply() {
       fetch(
         `https://modchatserver.micahlindley.com/api/messages/${this.msg.room}/${this.msg.reply_id}`
       )
         .then((res) => {
-          return res.json()
+          return res.json();
         })
         .then((data) => {
-          this.replyData = data
-        })
-    }
-  }
+          this.replyData = data;
+        });
+    },
+  },
 };
 </script>
 
@@ -222,5 +224,16 @@ img {
   font-size: 0.6em;
   margin-top: 0.2rem;
   color: #adadad;
+}
+
+.reply {
+  margin-top: 0.5rem;
+  margin-left: 0;
+  margin-right: 0;
+  width: calc(100% - 1rem);
+}
+
+.reply .title {
+  font-size: 0.9em;
 }
 </style>

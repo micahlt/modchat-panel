@@ -10,7 +10,9 @@
           title="Refresh"
           >refresh</a
         >
-        <a href="#" class="button" @click.prevent>Quick Mode</a>
+        <router-link to="/quick" class="button" @click.prevent
+          >Quick Mode</router-link
+        >
       </div>
       <transition-group name="messages" tag="div" class="messages-parent">
         <Message
@@ -18,10 +20,10 @@
           :msg="m"
           :key="m._id"
           @ignore="ignore"
-          @delete="del"
-          @ban="$emit('banModal', $event)"
-          @mute="$emit('muteModal', $event)"
-          @context="$emit('contextModal', $event)"
+          @del="$emit('del', $event)"
+          @banModal="$emit('banModal', $event)"
+          @muteModal="$emit('muteModal', $event)"
+          @contextModal="$emit('contextModal', $event)"
         />
       </transition-group>
     </div>
@@ -36,7 +38,7 @@
           >refresh</a
         >
       </div>
-      <transition-group name="messages" tag="div" class="content">
+      <transition-group name="messages" tag="div" class="content banned-parent">
         <BannedMuted
           v-for="m in bannedMuted"
           :msg="m"
@@ -47,13 +49,18 @@
         />
       </transition-group>
     </div>
+    <div class="gridcol">
+      <div class="col-heading">
+        <h2>Admin Actions</h2>
+      </div>
+    </div>
   </main>
 </template>
 
 <script>
 export default {
   name: "Home",
-  emits: ["banModal", "unban", "unmute"],
+  emits: ["banModal", "unban", "unmute", "del"],
   props: {
     at: String,
   },
@@ -134,24 +141,6 @@ export default {
       });
       this.bannedMuted.splice(index, 1);
     },
-    del(msg) {
-      fetch(`https://modchatserver.micahlindley.com/api/messages/delete`, {
-        method: "POST",
-        body: JSON.stringify({
-          room: msg.room,
-          access_token: this.at,
-          id: msg.id,
-        }),
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        credentials: "include",
-      }).then((res) => {
-        if (res.status == 200) {
-          this.ignore(msg);
-        }
-      });
-    },
   },
 };
 </script>
@@ -160,7 +149,7 @@ export default {
 main {
   height: calc(100% - 3rem);
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .gridcol {
@@ -218,6 +207,36 @@ main {
 
 .messages-parent {
   position: relative;
+}
+
+.messages-parent:empty:after {
+  content: "No reports for now!";
+  width: 100%;
+  text-align: center;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+}
+
+.banned-parent:empty,
+.messages-parent:empty {
+  position: relative;
+  height: calc(100% - 5rem);
+}
+
+.banned-parent:empty:after {
+  content: "No banned/muted users!";
+  width: 100%;
+  text-align: center;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
 }
 
 .refresher {
