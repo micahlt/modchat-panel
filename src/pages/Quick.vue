@@ -134,22 +134,22 @@ main {
 
 .red {
   background: #ff5b5b;
-  cursor: url("ban.png"), auto;
+  cursor: url("../ban.png"), auto;
 }
 
 .yellow {
   background: #fff780;
-  cursor: url("delete.png"), auto;
+  cursor: url("../delete.png"), auto;
 }
 
 .blue {
   background: #809fff;
-  cursor: url("mute.png"), auto;
+  cursor: url("../mute.png"), auto;
 }
 
 .green {
   background: #73cd7c;
-  cursor: url("ignore.png"), auto;
+  cursor: url("../ignore.png"), auto;
 }
 
 .quick {
